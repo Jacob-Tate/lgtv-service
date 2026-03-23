@@ -1,0 +1,37 @@
+[package]
+name        = "lgtv-service"
+version     = "0.1.0"
+edition     = "2021"
+description = "Windows service: sleep/wake LG C4 TV control via webOS and Wake-on-LAN"
+
+[[bin]]
+name = "lgtv-service"
+path = "src/main.rs"
+
+[dependencies]
+windows-service   = "0.6"
+windows           = { version = "0.62", features = [
+    "Win32_Foundation",
+    "Win32_System_Power",
+    "Win32_System_EventLog",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_System_Threading",
+] }
+tokio             = { version = "1", features = ["full"] }
+tokio-tungstenite = { version = "0.24", features = ["native-tls"] }
+native-tls         = "0.2"
+futures-util      = "0.3"
+wakey             = "0.3"
+serde             = { version = "1", features = ["derive"] }
+serde_json        = "1"
+toml              = "0.8"
+log               = "0.4"
+eventlog          = "0.2"
+env_logger        = "0.11"
+uuid              = { version = "1", features = ["v4"] }
+anyhow            = "1"
+
+[profile.release]
+opt-level = "z"
+strip     = true
+lto       = true

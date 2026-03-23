@@ -1,0 +1,23 @@
+# lgtv-service configuration
+# Copy this file to C:\ProgramData\lgtv-service\config.toml and fill in your TV's details.
+
+[tv]
+# Local IP address of your LG C4 TV.
+# Tip: assign a static IP (or DHCP reservation) in your router so this never changes.
+ip = "192.168.1.50"
+
+# MAC address of your TV (needed for Wake-on-LAN).
+# Find it in: TV Settings → General → About This TV → Network Information
+mac = "A8:23:FE:01:02:03"
+
+# Where the paired client key will be stored (written by `lgtv-service pair`).
+# You normally don't need to change this.
+client_key_path = "C:\\ProgramData\\lgtv-service\\client_key.txt"
+
+[timeouts]
+# Seconds to wait when connecting to the TV WebSocket (default: 3).
+# The PC has ~2s before sleep completes, so keep this low.
+connect_secs = 3
+
+# Seconds to wait for the TV to acknowledge a command (default: 2).
+ack_secs = 2
