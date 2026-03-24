@@ -203,7 +203,7 @@ pub async fn turn_off(
         .context("Sending register request")?;
 
     wait_for_registered(&mut read, ack_secs).await?;
-    log::debug!("Registered with TV.");
+    log::info!("Registered with TV.");
 
     // Send turnOff command.
     let cmd_id = uuid::Uuid::new_v4().to_string();

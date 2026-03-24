@@ -129,9 +129,14 @@ fn run_service() -> Result<()> {
 
 async fn async_service_main(mut event_rx: mpsc::Receiver<AppEvent>) -> Result<()> {
     crate::logging::init_service();
-    log::info!("lgtv-service starting.");
+    log::info!(
+        "lgtv-service starting. Log file: {}",
+        crate::logging::log_file_path().display()
+    );
 
     let config = crate::config::load().context("Loading config")?;
+    log::info!("TV ip={} mac={}", config.tv.ip, config.tv.mac);
+
     let client_key = crate::config::load_client_key(&config.tv.client_key_path)
         .context("Loading client key")?
         .unwrap_or_default();
