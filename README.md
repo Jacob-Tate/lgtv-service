@@ -86,6 +86,8 @@ The service is set to start automatically on boot.
 | `uninstall` | Remove the Windows service (requires elevation) |
 | `run` | Start the service loop (called internally by the SCM) |
 | `pair` | Interactively pair with the TV and save the client key |
+| `turn-off` | Turn the TV off immediately (e.g. Stream Deck button) |
+| `turn-on` | Send a Wake-on-LAN packet to turn the TV on (e.g. Stream Deck button) |
 | `test-power` | Turn the TV off, wait 30 s, then turn it back on — for testing |
 | `test [IP]` | Raw TCP probe to diagnose WebSocket connectivity |
 

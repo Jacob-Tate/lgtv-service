@@ -46,6 +46,16 @@ fn run() -> Result<()> {
             });
             probe::run(&ip)
         }
+        Some("turn-off") => {
+            logging::init_stderr();
+            tokio::runtime::Runtime::new()
+                .context("Creating tokio runtime")?
+                .block_on(cmd_turn_off())
+        }
+        Some("turn-on") => {
+            logging::init_stderr();
+            cmd_turn_on()
+        }
         Some("test-power") => {
             logging::init_stderr();
             tokio::runtime::Runtime::new()
@@ -61,6 +71,8 @@ Commands:
   uninstall    Remove the Windows service (requires elevation)
   run          Start the service (used internally by the SCM)
   pair         Interactively pair with the LG TV (requires the TV to be on)
+  turn-off     Turn the TV off immediately (Stream Deck / manual use)
+  turn-on      Send a Wake-on-LAN packet to turn the TV on (Stream Deck / manual use)
   test [IP]    Diagnose TV connectivity (raw TCP probe, bypasses tungstenite)
   test-power   Turn the TV off, wait 30 s, then turn it back on via WoL
 
@@ -142,6 +154,30 @@ fn cmd_uninstall() -> Result<()> {
     let _ = logging::deregister();
 
     println!("Service '{SERVICE_NAME}' uninstalled.");
+    Ok(())
+}
+
+// ── turn-off ──────────────────────────────────────────────────────────────────
+
+async fn cmd_turn_off() -> Result<()> {
+    let config = config::load().context("Loading config")?;
+    let client_key = config::load_client_key(&config.tv.client_key_path)
+        .context("Loading client key")?
+        .context("No client key found — run `lgtv-service pair` first")?;
+
+    println!("Turning TV off...");
+    tv::turn_off(&config, &client_key).await?;
+    println!("Done.");
+    Ok(())
+}
+
+// ── turn-on ───────────────────────────────────────────────────────────────────
+
+fn cmd_turn_on() -> Result<()> {
+    let config = config::load().context("Loading config")?;
+    println!("Sending Wake-on-LAN packet...");
+    tv::wake_on_lan(&config);
+    println!("Done. TV should be powering on now (~10 s boot time).");
     Ok(())
 }
 
